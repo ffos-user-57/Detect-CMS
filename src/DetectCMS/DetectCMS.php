@@ -4,9 +4,12 @@ namespace DetectCMS;
 
 require_once __DIR__ . '/Thirdparty/simple_html_dom.php';
 
+//echo "Hey";
+
+
 class DetectCMS
 {
-
+	
     public $systems = [
         "Drupal",
         "Wordpress",
@@ -42,6 +45,7 @@ class DetectCMS
     function __construct($url)
     {
         $this->url = $url;
+		//echo $url;
         list($this->home_headers, $this->home_html) = $this->fetchBodyAndHeaders();
         $this->result = $this->check($url);
     }
@@ -56,6 +60,8 @@ class DetectCMS
         foreach ($this->systems as $system_name) {
 
             $system_class = 'DetectCMS\\Systems\\' . $system_name;
+            //print_r($system_class);
+            include  __DIR__ .  "\\Systems\\" . $system_name . ".php";
 
             $system = new $system_class($this->home_html, $this->home_headers, $this->url);
 
@@ -82,6 +88,11 @@ class DetectCMS
         foreach ($this->systems as $system_name) {
 
             $system_class = 'DetectCMS\\Systems\\' . $system_name;
+
+			//include  __DIR__ .  "\\Systems\\" . $system_name . ".php";
+			//idk if you need this here tho, it seems to work without it
+			//if it doesnt detect for you - you can always uncomment this include 
+			//but i think it should work cause it isnt include_once
 
             $system = new $system_class($this->home_html, $this->home_headers, $this->url);
 
